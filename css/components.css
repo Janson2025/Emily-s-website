@@ -1,0 +1,159 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.9rem 1.25rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  transition:
+    transform var(--transition-fast),
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn-primary {
+  background: var(--color-text);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #000;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.btn-secondary:hover {
+  border-color: var(--color-accent);
+}
+
+.menu-toggle {
+  display: none;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 999px;
+  padding: 0;
+  cursor: pointer;
+}
+
+.menu-toggle span {
+  display: block;
+  width: 18px;
+  height: 1px;
+  margin: 5px auto;
+  background: var(--color-text);
+}
+
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+.service-card {
+  background: var(--color-bg-soft);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  transition: ease-in-out 0.2s;
+}
+
+.service-card:hover {
+  scale: 1.05;
+  cursor: pointer;
+}
+
+.service-card-media {
+  position: relative;
+  height: 84px;
+  overflow: hidden;
+}
+
+.service-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.service-card-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.45),
+    rgba(0, 0, 0, 0.18)
+  );
+}
+
+.service-card-title {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  margin: 0;
+  color: white;
+  font-size: 2rem;
+  line-height: 1;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+}
+
+.service-card-body {
+  padding: 1rem 1.1rem 1.15rem;
+}
+
+.service-card-body p {
+  margin: 0;
+}
+
+.neetle-logos {
+  backdrop-filter: blur(8px);
+  background: rgba(244, 241, 235, 0.82);
+  width: 100%;
+  margin-bottom: 100px;
+  padding: 50px;
+}
+
+.neetle-logos {
+  position: relative; /* anchor for absolute positioning */
+}
+
+.neetle-logos .neetle {
+  position: absolute;
+
+  /* responsive positioning */
+  right: clamp(5px, 4vw, 100px);
+  top: 60%;
+  transform: translateY(-50%) rotate(0deg);
+
+  /* responsive size */
+  width: clamp(60px, 8vw, 100px);
+  height: auto;
+  top: 100px;
+
+  /* animation */
+  transform-origin: 90% 10%;
+  top:55%;
+  animation: neetle-sway 2s ease-in-out infinite alternate;
+}
+
+@keyframes neetle-sway {
+  0% {
+    transform: translateY(-50%) rotate(-2.5deg);
+  }
+  100% {
+    transform: translateY(-50%) rotate(2.55deg);
+  }
+}

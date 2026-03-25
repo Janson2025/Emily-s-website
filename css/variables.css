@@ -1,0 +1,30 @@
+:root {
+  --color-bg: #f4f1eb;
+  --color-bg-soft: rgba(255, 255, 255, 0.72);
+  --color-surface: rgba(255, 255, 255, 0.58);
+  --color-text: #161616;
+  --color-text-muted: #4f4a46;
+  --color-border: rgba(0, 0, 0, 0.08);
+  --color-accent: #cf6a6a;
+  --color-shadow: rgba(0, 0, 0, 0.08);
+
+  --font-display: "Amatic SC", cursive;
+  --font-body: "Inter", sans-serif;
+
+  --container-width: 1200px;
+  --header-height: 88px;
+
+  --radius-sm: 10px;
+  --radius-md: 18px;
+  --radius-lg: 28px;
+
+  --space-xs: 0.5rem;
+  --space-sm: 0.875rem;
+  --space-md: 1.25rem;
+  --space-lg: 2rem;
+  --space-xl: 4rem;
+  --space-2xl: 6rem;
+
+  --transition-fast: 180ms ease;
+  --transition-medium: 300ms ease;
+}
