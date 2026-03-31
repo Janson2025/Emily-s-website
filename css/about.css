@@ -1,0 +1,75 @@
+.about-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: center;
+    margin-top: 2rem;
+}
+
+.about-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.section-heading,
+.about-grid {
+    width: 100%;
+    max-width: 700px;
+    text-align: center;
+}
+
+.profile-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.profile-image img {
+    width: 70%;
+    height: auto;
+    border-radius: var(--radius-md);
+}
+
+.brand-enbroidery {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 55%;
+    left: 50%;
+    transform: translate(-20%, -50%);
+    z-index: -1;
+    width: 70%;
+}
+
+.brand-enbroidery img {
+    width: 70%;
+    height: auto;
+    
+}
+
+.portfolio {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: var(--space-lg);
+    padding: 0.9rem 1.25rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-border);
+    background: var(--color-text);
+    color: white;
+    cursor: pointer;
+    transition:
+        transform var(--transition-medium),
+        background-color var(--transition-medium),
+        border-color var(--transition-medium);
+}
+
+.portfolio:hover {
+    color: var(--color-accent);
+    transform: translateY(-2px);
+}
