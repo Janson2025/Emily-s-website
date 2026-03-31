@@ -122,7 +122,7 @@ const CONFIG = {
 };
 
 const IMAGE_CONFIG = {
-  totalImages: 59,
+  totalImages: 112,
   favoredImageNumbers: [2, 5, 8],
   favoredWeight: 3,
   basePath: "/assets/images/gallery",
