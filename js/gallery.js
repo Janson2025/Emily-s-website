@@ -125,7 +125,7 @@ const IMAGE_CONFIG = {
   totalImages: 112,
   favoredImageNumbers: [2, 5, 8],
   favoredWeight: 3,
-  basePath: "/assets/images/gallery",
+  basePath: "assets/images/gallery",
   filePrefix: "Layer ",
   fileExtension: ".png",
 };

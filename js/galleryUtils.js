@@ -38,7 +38,7 @@ export function createImagePicker({
   totalImages,
   favoredImageNumbers = [],
   favoredWeight = 0,
-  basePath = "/assets/images/gallery",
+  basePath = "assets/images/gallery",
   filePrefix = "Layer ",
   fileExtension = ".png",
 }) {
