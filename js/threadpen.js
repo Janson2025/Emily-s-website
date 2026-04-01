@@ -11,7 +11,7 @@ const CONFIG = {
 
   // appearance
   threadColor: "#cf6a6a",
-  startOpacity: 0.3,
+  startOpacity: 0.45,
 
   // arc behavior
   arcMode: "alternate", // "alternate" | "fixed"

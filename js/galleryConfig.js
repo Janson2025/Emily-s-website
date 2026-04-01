@@ -56,9 +56,9 @@ export const CONFIG = {
   // Image sizing
   // ------------------------------
   widths: {
-    back: { min: 130, max: 175 },
-    mid: { min: 165, max: 215 },
-    front: { min: 205, max: 255 },
+    back: { min: 260, max: 280 },
+    mid: { min: 220, max: 240 },
+    front: { min: 180, max: 200 },
   },
 
   scales: {
@@ -108,15 +108,15 @@ export const CONFIG = {
   // ------------------------------
   // Spawn spacing constraints
   // ------------------------------
-  minHorizontalGap: 155,
-  minVerticalGapAtSpawn: 260,
-  maxSpawnPositionTries: 80,
+  minHorizontalGap: 1200,
+  minVerticalGapAtSpawn: 600,
+  maxSpawnPositionTries: 30,
 
   // ------------------------------
   // Horizontal drift
   // ------------------------------
   drift: {
-    amount: 7,
+    amount: 24,
     speedMin: 0.0002,
     speedMax: 0.00045,
   },
@@ -164,22 +164,22 @@ export const CONFIG = {
     scrollSpawnPerSecondFactor: 20.5,
     reverseSpawnPerSecondFactor: 20.5,
     reverseBurstThreshold: 1.2,
-    reverseBurstCount: 2,
+    reverseBurstCount: 1.2,
     minVisibleBottomEntrants: 2,
     maxFrameDtMs: 14,
 
     layerResponsiveness: {
-      back: 6,
-      mid: 8,
-      front: 10,
+      back: 3,
+      mid: 4,
+      front: 7,
     },
 
     controller: {
       smoothing: 0.12,
       targetDecay: 0.82,
-      maxBoost: 10,
+      maxBoost: 6,
       sensitivity: 110,
-      deadzone: 0.03,
+      deadzone: 0.015,
     },
   },
 };
