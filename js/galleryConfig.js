@@ -5,13 +5,13 @@
 // ==============================
 
 export const CONFIG = {
-
   motion: {
     ambientMultiplier: 1.35,
     scrollMultiplier: 0.22,
   },
 
-  minActiveItems: 12,
+  minActiveItems: 6,
+
   // ------------------------------
   // Layer population limits
   // ------------------------------
@@ -24,19 +24,18 @@ export const CONFIG = {
   // ------------------------------
   // Initial gallery seeding
   // ------------------------------
-  initialItemCount: 12,
+  initialItemCount: 6,
 
   // ------------------------------
   // Movement speeds
-  // Used when not actively scrolling
   // ------------------------------
-    speeds: {
-        back: 0.35,
-        mid: 0.55,
-        front: 0.8,
-    },
+  speeds: {
+    back: 0.35,
+    mid: 0.55,
+    front: 0.8,
+  },
 
-    speedVariance: 0.14,
+  speedVariance: 0.14,
 
   // ------------------------------
   // Spawn positioning
@@ -137,31 +136,52 @@ export const CONFIG = {
   removeOffset: 260,
 
   // ------------------------------
+  // Hover / focus behavior
+  // ------------------------------
+  hover: {
+    enterDurationMsSmall: 260,
+    enterDurationMsMedium: 360,
+    enterDurationMsLarge: 480,
+    leaveDurationMs: 320,
+    holdDelayMs: 180,
+    liftDurationMs: 120,
+    centerMoveDurationMs: 280,
+    scaleBoost: 0.24,
+    shadowBlurMin: 14,
+    shadowBlurMax: 34,
+    shadowOpacityMin: 0.14,
+    shadowOpacityMax: 0.38,
+    zIndexHover: 120,
+    zIndexClick: 140,
+    centerYOffset: -18,
+  },
+
+  // ------------------------------
   // Scroll-driven movement + spawning
   // ------------------------------
   scroll: {
-        ambientSpawnPerSecond: 0.65,
-        scrollSpawnPerSecondFactor: 6.5,
-        reverseSpawnPerSecondFactor: 6.5,
-        reverseBurstThreshold: 0.2,
-        reverseBurstCount: 2,
-        minVisibleBottomEntrants: 2,
-        maxFrameDtMs: 14,
+    ambientSpawnPerSecond: 0.65,
+    scrollSpawnPerSecondFactor: 20.5,
+    reverseSpawnPerSecondFactor: 20.5,
+    reverseBurstThreshold: 1.2,
+    reverseBurstCount: 2,
+    minVisibleBottomEntrants: 2,
+    maxFrameDtMs: 14,
 
-        layerResponsiveness: {
-            back: 44,
-            mid: 22,
-            front: 10,
-        },
-
-        controller: {
-            smoothing: 0.12,
-            targetDecay: 0.82,
-            maxBoost: 2,
-            sensitivity: 110,
-            deadzone: 0.03,
-        },
+    layerResponsiveness: {
+      back: 6,
+      mid: 8,
+      front: 10,
     },
+
+    controller: {
+      smoothing: 0.12,
+      targetDecay: 0.82,
+      maxBoost: 10,
+      sensitivity: 110,
+      deadzone: 0.03,
+    },
+  },
 };
 
 // ==============================

@@ -18,9 +18,15 @@
   <link rel="stylesheet" href="css/layout.css" />
   <link rel="stylesheet" href="css/components.css" />
   <link rel="stylesheet" href="css/pages.css" />
+  <link rel="stylesheet" href="css/threadpen.css">
 </head>
 <body>
-  <div class="site-shell">
+    <div class="thread-stage">
+        <svg class="thread-svg" aria-hidden="true">
+            <g id="thread-layer"></g>
+        </svg>
+    </div>
+    <div class="site-shell">
     <div id="site-header" class="site-header"></div>
     <main>
         <section class="hero section">
@@ -57,7 +63,7 @@
             </div>
         </section>
         <section class="neetle-logos section">
-            <img src="assets/images/branding/thread.svg" alt="thread">
+            <img src="assets/images/branding/threadSpool.svg" alt="thread">
             <img src="assets/images/branding/neetle-single.svg" class="neetle" alt="neetle">
         </section>
         <section class="services-preview section">
@@ -126,5 +132,6 @@
   <script src="js/main.js"></script>
   <script src="js/nav.js"></script>
   <script type = "module" src="js/gallery.js"></script>
+  <script src="js/threadpen.js"></script>
 </body>
 </html>

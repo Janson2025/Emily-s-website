@@ -29,6 +29,11 @@ state.spawnAccumulators = {
 
 let lastFrameTime = performance.now();
 let scrollController = null;
+let nextPromotedZIndex = (CONFIG.hover?.promoteZIndex ?? 999) + 1;
+
+function lerp(start, end, t) {
+  return start + (end - start) * t;
+}
 
 function addItem(layerName, spawnSide = "top") {
   const item = createGalleryItem({
@@ -38,6 +43,14 @@ function addItem(layerName, spawnSide = "top") {
     spawnSide,
   });
 
+  if (item.hoverState == null) item.hoverState = "idle";
+  if (item.hoverTarget == null) item.hoverTarget = 0;
+  if (item.hoverProgress == null) item.hoverProgress = 0;
+  if (item.focusOffsetX == null) item.focusOffsetX = 0;
+  if (item.focusOffsetY == null) item.focusOffsetY = 0;
+  if (item.hasHoverClass == null) item.hasHoverClass = false;
+  if (item.promotedZIndex == null) item.promotedZIndex = null;
+
   state.layers[layerName].appendChild(item.el);
   state.items.push(item);
 
@@ -45,6 +58,11 @@ function addItem(layerName, spawnSide = "top") {
 }
 
 function removeItem(item) {
+  if (item.hoverDelayTimeoutId) {
+    window.clearTimeout(item.hoverDelayTimeoutId);
+    item.hoverDelayTimeoutId = null;
+  }
+
   item.el.remove();
 
   const index = state.items.indexOf(item);
@@ -124,12 +142,10 @@ function updateSpawnAccumulators(dtSeconds, scrollBoost) {
   const magnitude = Math.abs(scrollBoost);
 
   if (scrollBoost > 0) {
-    // items are moving upward, so bring replacements in from below
     state.spawnAccumulators.bottom +=
       runtimeConfig.ambientSpawnPerSecond * dtSeconds +
       magnitude * runtimeConfig.scrollSpawnPerSecondFactor * dtSeconds;
   } else {
-    // items are moving downward, so bring replacements in from above
     state.spawnAccumulators.top +=
       runtimeConfig.ambientSpawnPerSecond * dtSeconds +
       magnitude * runtimeConfig.reverseSpawnPerSecondFactor * dtSeconds;
@@ -145,6 +161,118 @@ function consumeSpawnAccumulators() {
   while (state.spawnAccumulators.bottom >= 1) {
     state.spawnAccumulators.bottom -= 1;
     trySpawnOne("bottom");
+  }
+}
+
+function updateItemHoverProgress(item, dtMs) {
+  const target = item.hoverTarget ?? 0;
+  const current = item.hoverProgress ?? 0;
+
+  const enterDuration =
+    item.hoverEnterDurationMs ??
+    CONFIG.hover?.enterDurationMs ??
+    420;
+
+  const leaveDuration =
+    item.hoverLeaveDurationMs ??
+    CONFIG.hover?.leaveDurationMs ??
+    320;
+
+  const duration = target > current ? enterDuration : leaveDuration;
+  const step = duration > 0 ? dtMs / duration : 1;
+
+  item.hoverProgress = lerp(current, target, Math.min(step, 1));
+
+  if (Math.abs(item.hoverProgress - target) < 0.001) {
+    item.hoverProgress = target;
+  }
+
+  if (item.hoverProgress >= 1 && item.hoverState === "entering") {
+    item.hoverState = "focused";
+  }
+
+  if (item.hoverProgress <= 0 && item.hoverState === "leaving") {
+    item.hoverState = "idle";
+    item.isFocused = false;
+    item.focusOffsetX = 0;
+    item.focusOffsetY = 0;
+    item.promotedZIndex = null;
+    item.el.style.zIndex = "";
+  }
+}
+
+function updateItemFocusOffsets(item) {
+  const gallery = state.gallery;
+  if (!gallery) return;
+
+  const hoverProgress = item.hoverProgress ?? 0;
+
+  if (hoverProgress <= 0 && !item.isFocused) {
+    item.focusOffsetX = 0;
+    item.focusOffsetY = 0;
+    return;
+  }
+
+  const galleryWidth = gallery.clientWidth;
+  const galleryHeight = gallery.clientHeight;
+
+  const orbitScaleGuess = (CONFIG.orbit.scaleMin + CONFIG.orbit.scaleMax) / 2;
+
+  const hoverScaleMultiplier =
+    1 + ((CONFIG.hover?.scaleMultiplier ?? 1.12) - 1) * hoverProgress;
+
+  const visualScale = item.scale * orbitScaleGuess * hoverScaleMultiplier;
+  const visualWidth = item.width * visualScale;
+  const visualHeight = item.height * visualScale;
+
+  const currentCenterX = item.x + visualWidth / 2;
+  const currentCenterY = item.y + visualHeight / 2;
+
+  const targetCenterX = galleryWidth / 2;
+  const targetCenterY = galleryHeight / 2;
+
+  const targetOffsetX = targetCenterX - currentCenterX;
+  const targetOffsetY = targetCenterY - currentCenterY;
+
+  const moveStartThreshold = CONFIG.hover?.centerMoveStart ?? 0.22;
+
+  if (hoverProgress <= moveStartThreshold) {
+    item.focusOffsetX = lerp(item.focusOffsetX ?? 0, 0, 0.28);
+    item.focusOffsetY = lerp(item.focusOffsetY ?? 0, 0, 0.28);
+    return;
+  }
+
+  const normalizedMoveProgress =
+    (hoverProgress - moveStartThreshold) / (1 - moveStartThreshold);
+
+  const gatedTargetOffsetX = targetOffsetX * normalizedMoveProgress;
+  const gatedTargetOffsetY = targetOffsetY * normalizedMoveProgress;
+
+  const lerpAmount =
+    item.isHovered || item.isFocused
+      ? CONFIG.hover?.centerLerp ?? 0.08
+      : CONFIG.hover?.uncenterLerp ?? 0.12;
+
+  item.focusOffsetX = lerp(item.focusOffsetX ?? 0, gatedTargetOffsetX, lerpAmount);
+  item.focusOffsetY = lerp(item.focusOffsetY ?? 0, gatedTargetOffsetY, lerpAmount);
+}
+
+function updateItemZIndex(item) {
+  const promoteThreshold = CONFIG.hover?.zIndexPromoteAt ?? 0.08;
+  const fastPromoteZIndex = CONFIG.hover?.promoteZIndex ?? 999;
+
+  if ((item.hoverProgress ?? 0) > promoteThreshold) {
+    if (!item.promotedZIndex) {
+      item.promotedZIndex = Math.max(nextPromotedZIndex++, fastPromoteZIndex);
+    }
+
+    item.el.style.zIndex = String(item.promotedZIndex);
+    return;
+  }
+
+  if (!item.isFocused && (item.hoverProgress ?? 0) <= 0) {
+    item.promotedZIndex = null;
+    item.el.style.zIndex = "";
   }
 }
 
@@ -172,12 +300,16 @@ function animate(time = performance.now()) {
   for (let i = state.items.length - 1; i >= 0; i--) {
     const item = state.items[i];
 
+    updateItemHoverProgress(item, dtMs);
+    updateItemZIndex(item);
+    updateItemFocusOffsets(item);
+
     if (!item.isPaused) {
       const velocityY = getItemVelocityY(item, scrollBoost);
       item.y += velocityY * dtFrames;
     }
 
-    if (isItemOutOfBounds(item, galleryHeight)) {
+    if (isItemOutOfBounds(item, galleryHeight) && !item.isFocused) {
       removeItem(item);
       continue;
     }
@@ -199,6 +331,9 @@ function repositionItemsOnResize() {
     );
 
     item.x = position.x;
+    item.focusOffsetX = 0;
+    item.focusOffsetY = 0;
+
     applyItemStyles(CONFIG, item);
   }
 }

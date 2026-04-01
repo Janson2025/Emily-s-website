@@ -19,7 +19,23 @@ export function getLayerDepth(CONFIG, item, time) {
   );
 }
 
-export function buildTransform(CONFIG, item, time) {
+function clamp01(value) {
+  return Math.max(0, Math.min(1, value));
+}
+
+function lerp(start, end, t) {
+  return start + (end - start) * t;
+}
+
+function easeInOut(t) {
+  const x = clamp01(t);
+
+  return x < 0.5
+    ? 2 * x * x
+    : 1 - Math.pow(-2 * x + 2, 2) / 2;
+}
+
+function getNormalTransformValues(CONFIG, item, time) {
   const orbitPhase = time * item.orbitSpeed + item.orbitOffset;
 
   const orbitX = Math.sin(orbitPhase) * item.orbitRadius;
@@ -32,14 +48,57 @@ export function buildTransform(CONFIG, item, time) {
     Math.sin(time * item.wobbleSpeed + item.wobbleOffset) *
     CONFIG.tilt.wobbleAmount;
 
-  const currentRotation = item.baseRotation + rotationWobble;
-  const currentDepth = getLayerDepth(CONFIG, item, time);
-  const currentScale = item.scale * depthScale;
+  const rotation = item.baseRotation + rotationWobble;
+  const depth = getLayerDepth(CONFIG, item, time);
+  const scale = item.scale * depthScale;
+
+  return {
+    x: orbitX + horizontalDrift,
+    y: item.y,
+    scale,
+    rotation,
+    depth,
+  };
+}
+
+function getGalleryCenterOffsets(item) {
+  return {
+    x: item.focusOffsetX ?? 0,
+    y: item.focusOffsetY ?? 0,
+  };
+}
+
+function getFocusedTransformValues(CONFIG, item, time) {
+  const normal = getNormalTransformValues(CONFIG, item, time);
+  const offsets = getGalleryCenterOffsets(item);
+
+  return {
+    x: normal.x + offsets.x,
+    y: normal.y + offsets.y,
+    scale: normal.scale * (CONFIG.hover?.scaleMultiplier ?? 1.12),
+    rotation:
+      normal.rotation * (CONFIG.hover?.focusRotationDampen ?? 0.35),
+    depth: normal.depth + (CONFIG.hover?.focusDepthBoost ?? 140),
+  };
+}
+
+export function buildTransform(CONFIG, item, time) {
+  const normal = getNormalTransformValues(CONFIG, item, time);
+  const focus = getFocusedTransformValues(CONFIG, item, time);
+
+  const hoverProgress = item.hoverProgress ?? 0;
+  const easedHover = easeInOut(hoverProgress);
+
+  const finalX = lerp(normal.x, focus.x, easedHover);
+  const finalY = lerp(normal.y, focus.y, easedHover);
+  const finalScale = lerp(normal.scale, focus.scale, easedHover);
+  const finalRotation = lerp(normal.rotation, focus.rotation, easedHover);
+  const finalDepth = lerp(normal.depth, focus.depth, easedHover);
 
   return `
-    translate3d(${orbitX + horizontalDrift}px, ${item.y}px, ${currentDepth}px)
-    scale(${currentScale})
-    rotate(${currentRotation}deg)
+    translate3d(${finalX}px, ${finalY}px, ${finalDepth}px)
+    scale(${finalScale})
+    rotate(${finalRotation}deg)
   `;
 }
 

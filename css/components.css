@@ -123,7 +123,8 @@
   background: rgba(244, 241, 235, 0.82);
   width: 100%;
   margin-bottom: 100px;
-  padding: 50px;
+  padding: 40px;
+  padding-bottom:80px;
 }
 
 .neetle-logos {
@@ -134,8 +135,8 @@
   position: absolute;
 
   /* responsive positioning */
-  right: clamp(5px, 4vw, 100px);
-  top: 60%;
+  right: clamp(5px, 4vw, 45px);
+  top: 50%;
   transform: translateY(-50%) rotate(0deg);
 
   /* responsive size */
@@ -145,7 +146,7 @@
 
   /* animation */
   transform-origin: 90% 10%;
-  top:55%;
+  top: 70%;
   animation: neetle-sway 2s ease-in-out infinite alternate;
 }
 

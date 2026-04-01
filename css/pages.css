@@ -75,11 +75,28 @@
   border-radius: var(--radius-md);
   overflow: hidden;
   background: white;
-  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.6);
   transform-style: preserve-3d;
   transform-origin: center center;
-  will-change: transform;
+  will-change: transform, box-shadow, filter, z-index;
   backface-visibility: hidden;
+  pointer-events: auto;
+  transition:
+    box-shadow 180ms ease,
+    filter 180ms ease,
+    z-index 70ms linear;
+}
+
+.gallery-item--interactive {
+  cursor: pointer;
+}
+
+.gallery-item.is-hover-focused {
+  box-shadow:
+    0 0 18px rgba(255, 255, 255, 0.24),
+    0 0 38px rgba(255, 255, 255, 0.14),
+    0 10px 24px rgba(0, 0, 0, 0.24);
+  filter: brightness(1.03);
 }
 
 .gallery-item img {
@@ -87,6 +104,51 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  pointer-events: none;
+}
+
+.gallery-modal-open {
+  overflow: hidden;
+}
+
+.gallery-modal-overlay[hidden] {
+  display: none;
+}
+
+.gallery-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  background: rgba(10, 10, 10, 0.52);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.gallery-modal-dialog {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: min(78vw, 980px);
+  max-height: 84vh;
+  pointer-events: auto;
+}
+
+.gallery-modal-image {
+  display: block;
+  max-width: 100%;
+  max-height: 84vh;
+  width: auto;
+  height: auto;
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.34),
+    0 0 32px rgba(255, 255, 255, 0.08);
 }
 
 .services-preview {
@@ -121,6 +183,19 @@
     height: 100%;
     margin-top: 0;
   }
+
+  .gallery-modal-overlay {
+    padding: 1.25rem;
+  }
+
+  .gallery-modal-dialog {
+    max-width: 92vw;
+    max-height: 82vh;
+  }
+
+  .gallery-modal-image {
+    max-height: 82vh;
+  }
 }
 
 @media (max-width: 640px) {
@@ -142,5 +217,19 @@
 
   .hero-gallery {
     height: 660px;
+  }
+
+  .gallery-modal-overlay {
+    padding: 0.9rem;
+  }
+
+  .gallery-modal-dialog {
+    max-width: 96vw;
+    max-height: 80vh;
+  }
+
+  .gallery-modal-image {
+    max-height: 80vh;
+    border-radius: var(--radius-md);
   }
 }
